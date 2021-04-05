@@ -1,22 +1,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ProductListResponseModel } from 'src/app/models/productListResponseModel';
+import { ListResponseModel } from '../models/listResponseModel';
 import { Observable } from 'rxjs';
+import { Product } from '../models/product';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProductService {
-  apiUrl = 'https://localhost:44332/api/products/getall'; 
+  apiUrl = 'https://localhost:44332/api/';
 
   constructor(private httpClient: HttpClient) {}
 
-  //burada ise diyoruz ki sen subscribe yani abone olucnabilecek bir responsemodel döneceksin(bu yüzden 
+  //burada ise diyoruz ki sen subscribe yani abone olucnabilecek bir responsemodel döneceksin(bu yüzden
   //metot içi return olacak)
-  getProducts():Observable<ProductListResponseModel> {
+  getProducts(): Observable<ListResponseModel<Product>> {
     //this üstteki class'a denk geliyor.
     //httpclient nesnesinin getini kullanıyoruz ve get'e parantez içinde data alacağı yeri söyleyip alacağı bu
     //datayı ise <> parantez içindeki Model'e map edeceğimizi söylüyoruz.
-    return this.httpClient.get<ProductListResponseModel>(this.apiUrl);
+    let newPath = this.apiUrl + 'products/getall';
+    return this.httpClient.get<ListResponseModel<Product>>(newPath);
+  }
+
+  getProductsByCategory(
+    categoryId: number
+  ): Observable<ListResponseModel<Product>> {
+    let newPath =
+      this.apiUrl + 'products/getbycategory?categoryId=' + categoryId;
+    return this.httpClient.get<ListResponseModel<Product>>(newPath);
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/models/product';
-import { ProductListResponseModel } from 'src/app/models/productListResponseModel';
 import { ProductService } from 'src/app/service/product.service';
 
 @Component({
@@ -13,13 +13,19 @@ export class ProductComponent implements OnInit {
   dataLoaded = false;
 
   //burada product.component, product.service'i kullanabilir dedik.
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private activatedRoute:ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.getProduct();
+    //paramsa categoryid değerimiz geliyor.
+this.activatedRoute.params.subscribe(params=>{
+  if(params["categoryId"]){
+    this.getProductsByCategory(params["categoryId"])
+  }else{
+    this.getProducts()
+  }});
   }
 
-  getProduct() {
+  getProducts() {
     //burada productservice'de bulunan getProducts metodundan gelen dataya abone ol ve products[] abone
     //olduğumuz datanın data dizinine eşitle dedik.
     this.productService.getProducts().subscribe((response) => {
@@ -27,4 +33,14 @@ export class ProductComponent implements OnInit {
       this.dataLoaded = true;
     });
   }
+
+  getProductsByCategory(categoryId:number) {
+    //burada productservice'de bulunan getProducts metodundan gelen dataya abone ol ve products[] abone
+    //olduğumuz datanın data dizinine eşitle dedik.
+    this.productService.getProductsByCategory(categoryId).subscribe((response) => {
+      this.products = response.data;
+      this.dataLoaded = true;
+    });
+  }
+  
 }
