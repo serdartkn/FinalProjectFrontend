@@ -1,6 +1,19 @@
 <div *ngIf="dataLoaded == false" class="spinner-border text-danger" role="status">
   <span class="visually-hidden">Loading...</span>
 </div>
+
+<div class="mb-3">
+  <br>
+  <!--[(ngModel)] buna banana notacion (muz notasyonu diyorlar)-->
+ <!--burada diyoruz ki ngmodule yanı html dosyasının component.tsinde bulunan filtertext alanını buraya baglıyoruz.--> 
+  <!--Bu kullanımın hata vermemesı için app.module dosyamızın içine import{FormsModule} from "@angular/forms" ı eklememiz gerekiyor.-->
+ <!--bu işleme two way binding'de denir.-->
+  <input type="text" [(ngModel)]="filterText" class="form-control" id="filtertext" placeholder="Ürün Ara">
+</div>
+<div *ngIf=" filterText.length>2" class="alert alert-success">
+{{filterText}}
+
+</div>
 <table *ngIf="dataLoaded == true" class="table">
   <thead>
     <tr>
@@ -8,14 +21,21 @@
       <th>Ürün Adı</th>
       <th>Kategori</th>
       <th>Fiyat</th>
+      <th>KDV'li Fiyat</th>
       <th>Stok Adedi</th>
+      <th></th>
     </tr>
   </thead>
-  <tr *ngFor="let product of products">
+  <tbody>
+  <tr *ngFor="let product of products | filterPipe:filterText">
     <td>{{ product.productId }}</td>
-    <td>{{ product.productName }}</td>
+    <td>{{ product.productName | uppercase}}</td>
     <td>{{ product.categoryId }}</td>
+    <td>{{ product.unitPrice | currency}}</td>
+    <td>{{ product.unitPrice |vatAdded:10 | currency }}</td>
     <td>{{ product.unitsInStock }}</td>
-    <td>{{ product.unitPrice }}</td>
+    <td><button (click)="addToCart(product)" type="button" class="btn btn-success">Sepete Ekle</button></td>
   </tr>
+  </tbody>
+
 </table>

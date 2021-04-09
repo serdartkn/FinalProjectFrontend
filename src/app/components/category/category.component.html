@@ -1,9 +1,8 @@
 <ul class="list-group">
   <li routerLink="/products" [class]="getAllCategoryClass()">Tümünü Göster</li>
-  <li (click)="setCurrentCagetory(category)"
-  routerLink="products/category/{{category.categoryId}}"
+  <li
+    (click)="setCurrentCagetory(category)"
+    routerLink="products/category/{{ category.categoryId }}"
     *ngFor="let category of categories"
-    [class]="getCategoryClass(category)">
-    {{ category.categoryName }}
-  </li>
+    [class]="getCategoryClass(category)">{{ category.categoryName }}</li>
 </ul>
